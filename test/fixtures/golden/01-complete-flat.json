@@ -1,0 +1,21 @@
+{
+  "description": "Fully conformant card using the canonical flat extension form.",
+  "expect": { "verdict": "ok", "errors": 0, "warns": 0 },
+  "card": {
+    "protocolVersion": "1.0",
+    "name": "Invoice Reconciliation Agent",
+    "description": "Matches supplier invoices against purchase orders.",
+    "version": "2.4.1",
+    "url": "https://agent.example.invalid/a2a",
+    "provider": { "name": "Example Operator BV" },
+    "capabilities": { "streaming": true, "pushNotifications": false },
+    "defaultInputModes": ["application/json", "text/plain"],
+    "defaultOutputModes": ["application/json"],
+    "skills": ["reconcile-invoice", "flag-exception"],
+    "x-bna.residency": "eu-west-1",
+    "x-bna.zdr": true,
+    "x-bna.compliance": ["SOC 2", "ISO 27001"],
+    "x-bna.pricing": { "model": "per-task", "currency": "EUR", "rate": 0.02 },
+    "x-bna.contact": "ops@example.invalid"
+  }
+}

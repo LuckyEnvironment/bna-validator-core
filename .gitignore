@@ -1,0 +1,8 @@
+node_modules/
+coverage/
+types/
+.package-smoke/
+.DS_Store
+.env
+.env.*
+*.log

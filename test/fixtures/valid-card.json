@@ -1,0 +1,17 @@
+{
+  "protocolVersion": "1.0",
+  "name": "Example Agent",
+  "description": "An anonymised valid card.",
+  "version": "1.2.3",
+  "url": "https://example.invalid/agent",
+  "provider": { "name": "Example Operator" },
+  "capabilities": { "streaming": true },
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["text/plain"],
+  "skills": ["summarise"],
+  "x-bna.residency": "eu-west-1",
+  "x-bna.zdr": false,
+  "x-bna.compliance": ["SOC 2"],
+  "x-bna.pricing": { "currency": "EUR" },
+  "x-bna.contact": "ops@example.invalid"
+}

@@ -1,0 +1,21 @@
+{
+  "description": "Documents the non-obvious hasValue contract: false and 0 are present values, a whitespace-only string is absent. x-bna.zdr false must score ok; x-bna.residency \"   \" must not.",
+  "expect": { "verdict": "warn", "errors": 0, "warns": 1 },
+  "card": {
+    "protocolVersion": "1.0",
+    "name": "Boundary Agent",
+    "description": "Exercises falsy-but-present extension values.",
+    "version": "1.0.0",
+    "url": "https://boundary.example.invalid/a2a",
+    "provider": { "name": "Example Operator BV" },
+    "capabilities": { "streaming": false },
+    "defaultInputModes": ["text/plain"],
+    "defaultOutputModes": ["text/plain"],
+    "skills": ["echo"],
+    "x-bna.residency": "   ",
+    "x-bna.zdr": false,
+    "x-bna.compliance": ["SOC 2"],
+    "x-bna.pricing": { "model": "free", "rate": 0 },
+    "x-bna.contact": "ops@example.invalid"
+  }
+}

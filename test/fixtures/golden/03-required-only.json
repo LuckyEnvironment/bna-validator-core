@@ -1,0 +1,16 @@
+{
+  "description": "Schema-valid card that declares no BNA extensions at all. Warns rather than errors, and the five extension fields carry the safe-default message.",
+  "expect": { "verdict": "warn", "errors": 0, "warns": 5 },
+  "card": {
+    "protocolVersion": "1.0",
+    "name": "Translation Agent",
+    "description": "Translates short documents between EU languages.",
+    "version": "0.9.0",
+    "url": "https://translate.example.invalid/a2a",
+    "provider": { "name": "Example Linguistics SARL" },
+    "capabilities": { "streaming": true },
+    "defaultInputModes": ["text/plain"],
+    "defaultOutputModes": ["text/plain"],
+    "skills": ["translate"]
+  }
+}

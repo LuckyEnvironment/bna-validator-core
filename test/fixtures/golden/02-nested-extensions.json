@@ -1,0 +1,23 @@
+{
+  "description": "Legacy nested x-bna form. Accepted, but every extension field is a style warning rather than an undeclared field. This is the regression guard for the flat-key bug: the vendor is compliant and must not be told their residency is missing.",
+  "expect": { "verdict": "warn", "errors": 0, "warns": 5 },
+  "card": {
+    "protocolVersion": "1.0",
+    "name": "Payment Routing Agent",
+    "description": "Selects a settlement rail for a given payment instruction.",
+    "version": "1.0.0",
+    "url": "https://routing.example.invalid/a2a",
+    "provider": { "name": "Example Payments GmbH" },
+    "capabilities": { "streaming": false },
+    "defaultInputModes": ["application/json"],
+    "defaultOutputModes": ["application/json"],
+    "skills": ["route-payment"],
+    "x-bna": {
+      "residency": "eu-central-1",
+      "zdr": false,
+      "compliance": ["ISO 27001"],
+      "pricing": { "model": "subscription", "currency": "EUR" },
+      "contact": "incidents@example.invalid"
+    }
+  }
+}

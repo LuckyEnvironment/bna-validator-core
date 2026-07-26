@@ -1,0 +1,269 @@
+{
+  "schemaVersion": "0.1",
+  "fixtures": {
+    "01-complete-flat.json": {
+      "verdict": "ok",
+      "errors": 0,
+      "warns": 0,
+      "fields": {
+        "protocolVersion": "ok: Present",
+        "name": "ok: Present",
+        "description": "ok: Present",
+        "version": "ok: Present",
+        "url": "ok: Present",
+        "provider.name": "ok: Present",
+        "capabilities": "ok: Present",
+        "defaultInputModes": "ok: Present",
+        "defaultOutputModes": "ok: Present",
+        "skills": "ok: Present",
+        "x-bna.residency": "ok: Present",
+        "x-bna.zdr": "ok: Present",
+        "x-bna.compliance": "ok: Present",
+        "x-bna.pricing": "ok: Present",
+        "x-bna.contact": "ok: Present"
+      }
+    },
+    "02-nested-extensions.json": {
+      "verdict": "warn",
+      "errors": 0,
+      "warns": 5,
+      "fields": {
+        "protocolVersion": "ok: Present",
+        "name": "ok: Present",
+        "description": "ok: Present",
+        "version": "ok: Present",
+        "url": "ok: Present",
+        "provider.name": "ok: Present",
+        "capabilities": "ok: Present",
+        "defaultInputModes": "ok: Present",
+        "defaultOutputModes": "ok: Present",
+        "skills": "ok: Present",
+        "x-bna.residency": "warn: Declared using nested extension form — use the canonical flat key.",
+        "x-bna.zdr": "warn: Declared using nested extension form — use the canonical flat key.",
+        "x-bna.compliance": "warn: Declared using nested extension form — use the canonical flat key.",
+        "x-bna.pricing": "warn: Declared using nested extension form — use the canonical flat key.",
+        "x-bna.contact": "warn: Declared using nested extension form — use the canonical flat key."
+      }
+    },
+    "03-required-only.json": {
+      "verdict": "warn",
+      "errors": 0,
+      "warns": 5,
+      "fields": {
+        "protocolVersion": "ok: Present",
+        "name": "ok: Present",
+        "description": "ok: Present",
+        "version": "ok: Present",
+        "url": "ok: Present",
+        "provider.name": "ok: Present",
+        "capabilities": "ok: Present",
+        "defaultInputModes": "ok: Present",
+        "defaultOutputModes": "ok: Present",
+        "skills": "ok: Present",
+        "x-bna.residency": "warn: Not declared — safe default will apply.",
+        "x-bna.zdr": "warn: Not declared — safe default will apply.",
+        "x-bna.compliance": "warn: Not declared — safe default will apply.",
+        "x-bna.pricing": "warn: Not declared — safe default will apply.",
+        "x-bna.contact": "warn: Not declared — safe default will apply."
+      }
+    },
+    "04-required-only-strict.json": {
+      "verdict": "err",
+      "errors": 5,
+      "warns": 0,
+      "fields": {
+        "protocolVersion": "ok: Present",
+        "name": "ok: Present",
+        "description": "ok: Present",
+        "version": "ok: Present",
+        "url": "ok: Present",
+        "provider.name": "ok: Present",
+        "capabilities": "ok: Present",
+        "defaultInputModes": "ok: Present",
+        "defaultOutputModes": "ok: Present",
+        "skills": "ok: Present",
+        "x-bna.residency": "err: Missing — blocking.",
+        "x-bna.zdr": "err: Missing — blocking.",
+        "x-bna.compliance": "err: Missing — blocking.",
+        "x-bna.pricing": "err: Missing — blocking.",
+        "x-bna.contact": "err: Missing — blocking."
+      }
+    },
+    "05-missing-required.json": {
+      "verdict": "err",
+      "errors": 2,
+      "warns": 5,
+      "fields": {
+        "protocolVersion": "ok: Present",
+        "name": "ok: Present",
+        "description": "ok: Present",
+        "version": "ok: Present",
+        "url": "ok: Present",
+        "provider.name": "err: Missing — blocking.",
+        "capabilities": "ok: Present",
+        "defaultInputModes": "ok: Present",
+        "defaultOutputModes": "ok: Present",
+        "skills": "err: Missing — blocking.",
+        "x-bna.residency": "warn: Not declared — safe default will apply.",
+        "x-bna.zdr": "warn: Not declared — safe default will apply.",
+        "x-bna.compliance": "warn: Not declared — safe default will apply.",
+        "x-bna.pricing": "warn: Not declared — safe default will apply.",
+        "x-bna.contact": "warn: Not declared — safe default will apply."
+      }
+    },
+    "06-type-mismatches.json": {
+      "verdict": "err",
+      "errors": 3,
+      "warns": 2,
+      "fields": {
+        "protocolVersion": "err: Invalid type — expected protocol-version.",
+        "name": "ok: Present",
+        "description": "ok: Present",
+        "version": "ok: Present",
+        "url": "err: Invalid type — expected url.",
+        "provider.name": "ok: Present",
+        "capabilities": "err: Invalid type — expected object.",
+        "defaultInputModes": "ok: Present",
+        "defaultOutputModes": "ok: Present",
+        "skills": "ok: Present",
+        "x-bna.residency": "ok: Present",
+        "x-bna.zdr": "warn: Invalid type — expected boolean.",
+        "x-bna.compliance": "ok: Present",
+        "x-bna.pricing": "warn: Invalid type — expected object.",
+        "x-bna.contact": "ok: Present"
+      }
+    },
+    "07-zero-and-false.json": {
+      "verdict": "warn",
+      "errors": 0,
+      "warns": 1,
+      "fields": {
+        "protocolVersion": "ok: Present",
+        "name": "ok: Present",
+        "description": "ok: Present",
+        "version": "ok: Present",
+        "url": "ok: Present",
+        "provider.name": "ok: Present",
+        "capabilities": "ok: Present",
+        "defaultInputModes": "ok: Present",
+        "defaultOutputModes": "ok: Present",
+        "skills": "ok: Present",
+        "x-bna.residency": "warn: Not declared — safe default will apply.",
+        "x-bna.zdr": "ok: Present",
+        "x-bna.compliance": "ok: Present",
+        "x-bna.pricing": "ok: Present",
+        "x-bna.contact": "ok: Present"
+      }
+    },
+    "08-partial-extensions.json": {
+      "verdict": "warn",
+      "errors": 0,
+      "warns": 3,
+      "fields": {
+        "protocolVersion": "ok: Present",
+        "name": "ok: Present",
+        "description": "ok: Present",
+        "version": "ok: Present",
+        "url": "ok: Present",
+        "provider.name": "ok: Present",
+        "capabilities": "ok: Present",
+        "defaultInputModes": "ok: Present",
+        "defaultOutputModes": "ok: Present",
+        "skills": "ok: Present",
+        "x-bna.residency": "ok: Present",
+        "x-bna.zdr": "warn: Not declared — safe default will apply.",
+        "x-bna.compliance": "warn: Not declared — safe default will apply.",
+        "x-bna.pricing": "warn: Not declared — safe default will apply.",
+        "x-bna.contact": "ok: Present"
+      }
+    },
+    "09-flat-provider-key.json": {
+      "verdict": "ok",
+      "errors": 0,
+      "warns": 0,
+      "fields": {
+        "protocolVersion": "ok: Present",
+        "name": "ok: Present",
+        "description": "ok: Present",
+        "version": "ok: Present",
+        "url": "ok: Present",
+        "provider.name": "ok: Present",
+        "capabilities": "ok: Present",
+        "defaultInputModes": "ok: Present",
+        "defaultOutputModes": "ok: Present",
+        "skills": "ok: Present",
+        "x-bna.residency": "ok: Present",
+        "x-bna.zdr": "ok: Present",
+        "x-bna.compliance": "ok: Present",
+        "x-bna.pricing": "ok: Present",
+        "x-bna.contact": "ok: Present"
+      }
+    },
+    "10-unicode-homoglyph.json": {
+      "verdict": "ok",
+      "errors": 0,
+      "warns": 0,
+      "fields": {
+        "protocolVersion": "ok: Present",
+        "name": "ok: Present",
+        "description": "ok: Present",
+        "version": "ok: Present",
+        "url": "ok: Present",
+        "provider.name": "ok: Present",
+        "capabilities": "ok: Present",
+        "defaultInputModes": "ok: Present",
+        "defaultOutputModes": "ok: Present",
+        "skills": "ok: Present",
+        "x-bna.residency": "ok: Present",
+        "x-bna.zdr": "ok: Present",
+        "x-bna.compliance": "ok: Present",
+        "x-bna.pricing": "ok: Present",
+        "x-bna.contact": "ok: Present"
+      }
+    },
+    "11-flat-wins-over-nested.json": {
+      "verdict": "ok",
+      "errors": 0,
+      "warns": 0,
+      "fields": {
+        "protocolVersion": "ok: Present",
+        "name": "ok: Present",
+        "description": "ok: Present",
+        "version": "ok: Present",
+        "url": "ok: Present",
+        "provider.name": "ok: Present",
+        "capabilities": "ok: Present",
+        "defaultInputModes": "ok: Present",
+        "defaultOutputModes": "ok: Present",
+        "skills": "ok: Present",
+        "x-bna.residency": "ok: Present",
+        "x-bna.zdr": "ok: Present",
+        "x-bna.compliance": "ok: Present",
+        "x-bna.pricing": "ok: Present",
+        "x-bna.contact": "ok: Present"
+      }
+    },
+    "12-empty-object.json": {
+      "verdict": "err",
+      "errors": 10,
+      "warns": 5,
+      "fields": {
+        "protocolVersion": "err: Missing — blocking.",
+        "name": "err: Missing — blocking.",
+        "description": "err: Missing — blocking.",
+        "version": "err: Missing — blocking.",
+        "url": "err: Missing — blocking.",
+        "provider.name": "err: Missing — blocking.",
+        "capabilities": "err: Missing — blocking.",
+        "defaultInputModes": "err: Missing — blocking.",
+        "defaultOutputModes": "err: Missing — blocking.",
+        "skills": "err: Missing — blocking.",
+        "x-bna.residency": "warn: Not declared — safe default will apply.",
+        "x-bna.zdr": "warn: Not declared — safe default will apply.",
+        "x-bna.compliance": "warn: Not declared — safe default will apply.",
+        "x-bna.pricing": "warn: Not declared — safe default will apply.",
+        "x-bna.contact": "warn: Not declared — safe default will apply."
+      }
+    }
+  }
+}

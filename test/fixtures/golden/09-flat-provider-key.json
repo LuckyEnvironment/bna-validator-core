@@ -1,0 +1,21 @@
+{
+  "description": "Core dotted path declared as a literal flat key (\"provider.name\") rather than a nested object. Both forms must resolve.",
+  "expect": { "verdict": "ok", "errors": 0, "warns": 0 },
+  "card": {
+    "protocolVersion": "1.0",
+    "name": "Flat Key Agent",
+    "description": "Declares provider.name as a literal top-level key.",
+    "version": "1.0.0",
+    "url": "https://flat.example.invalid/a2a",
+    "provider.name": "Example Operator BV",
+    "capabilities": { "streaming": true },
+    "defaultInputModes": ["text/plain"],
+    "defaultOutputModes": ["text/plain"],
+    "skills": ["echo"],
+    "x-bna.residency": "eu-west-1",
+    "x-bna.zdr": true,
+    "x-bna.compliance": ["SOC 2"],
+    "x-bna.pricing": { "model": "free" },
+    "x-bna.contact": "ops@example.invalid"
+  }
+}

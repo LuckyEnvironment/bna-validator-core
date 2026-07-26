@@ -1,0 +1,28 @@
+{
+  "description": "Card declares both forms with conflicting residency values. The canonical flat key must win and must not warn; the shadowed nested block is ignored rather than merged.",
+  "expect": { "verdict": "ok", "errors": 0, "warns": 0 },
+  "card": {
+    "protocolVersion": "1.0",
+    "name": "Dual Form Agent",
+    "description": "Declares both the flat and nested extension forms.",
+    "version": "1.0.0",
+    "url": "https://dual.example.invalid/a2a",
+    "provider": { "name": "Example Operator BV" },
+    "capabilities": { "streaming": true },
+    "defaultInputModes": ["text/plain"],
+    "defaultOutputModes": ["text/plain"],
+    "skills": ["echo"],
+    "x-bna.residency": "eu-west-1",
+    "x-bna.zdr": true,
+    "x-bna.compliance": ["SOC 2"],
+    "x-bna.pricing": { "model": "free" },
+    "x-bna.contact": "ops@example.invalid",
+    "x-bna": {
+      "residency": "us-east-1",
+      "zdr": false,
+      "compliance": ["NONE"],
+      "pricing": { "model": "metered" },
+      "contact": "other@example.invalid"
+    }
+  }
+}

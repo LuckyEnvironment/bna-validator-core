@@ -1,0 +1,18 @@
+{
+  "description": "Realistic partial adoption: residency and contact declared, the other three not. Only the undeclared fields warn.",
+  "expect": { "verdict": "warn", "errors": 0, "warns": 3 },
+  "card": {
+    "protocolVersion": "1.0",
+    "name": "Document Intake Agent",
+    "description": "Accepts scanned documents and returns structured fields.",
+    "version": "3.1.0",
+    "url": "https://intake.example.invalid/a2a",
+    "provider": { "name": "Example Document Services NV" },
+    "capabilities": { "streaming": true, "stateTransitionHistory": true },
+    "defaultInputModes": ["application/pdf", "image/png"],
+    "defaultOutputModes": ["application/json"],
+    "skills": ["extract-fields", "classify-document"],
+    "x-bna.residency": "eu-west-1",
+    "x-bna.contact": "security@example.invalid"
+  }
+}

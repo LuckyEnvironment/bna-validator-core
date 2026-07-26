@@ -1,0 +1,5 @@
+{
+  "description": "An empty object is a well-formed but wholly undeclared card. Every required field errors, every extension field warns, and nothing throws.",
+  "expect": { "verdict": "err", "errors": 10, "warns": 5 },
+  "card": {}
+}

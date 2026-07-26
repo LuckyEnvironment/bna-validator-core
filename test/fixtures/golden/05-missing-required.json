@@ -1,0 +1,16 @@
+{
+  "description": "Missing provider.name and skills. Required fields are blocking regardless of strict mode.",
+  "expect": { "verdict": "err", "errors": 2, "warns": 5 },
+  "card": {
+    "protocolVersion": "1.0",
+    "name": "Incomplete Agent",
+    "description": "A card that omits two required fields.",
+    "version": "1.0.0",
+    "url": "https://incomplete.example.invalid/a2a",
+    "provider": {},
+    "capabilities": { "streaming": false },
+    "defaultInputModes": ["text/plain"],
+    "defaultOutputModes": ["text/plain"],
+    "skills": []
+  }
+}

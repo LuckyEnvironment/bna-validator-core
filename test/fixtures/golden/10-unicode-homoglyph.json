@@ -1,0 +1,21 @@
+{
+  "description": "Cyrillic А (U+0410) opening the name, an emoji, and non-ASCII operator name. The validator records values as supplied and must not normalise, transliterate, or reject them — spoofing detection is a scoring concern, not a schema one.",
+  "expect": { "verdict": "ok", "errors": 0, "warns": 0 },
+  "card": {
+    "protocolVersion": "1.0",
+    "name": "Аgent Zero 🤖",
+    "description": "Homoglyph and emoji handling.",
+    "version": "1.0.0",
+    "url": "https://homoglyph.example.invalid/a2a",
+    "provider": { "name": "München Beispiel GmbH" },
+    "capabilities": { "streaming": true },
+    "defaultInputModes": ["text/plain"],
+    "defaultOutputModes": ["text/plain"],
+    "skills": ["échoer"],
+    "x-bna.residency": "eu-central-1",
+    "x-bna.zdr": false,
+    "x-bna.compliance": ["ISO 27001"],
+    "x-bna.pricing": { "model": "free" },
+    "x-bna.contact": "ops@beispiel.invalid"
+  }
+}

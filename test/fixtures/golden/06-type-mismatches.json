@@ -1,0 +1,21 @@
+{
+  "description": "Right keys, wrong types. Required-field mismatches are errors; extension-field mismatches are warnings outside strict mode.",
+  "expect": { "verdict": "err", "errors": 3, "warns": 2 },
+  "card": {
+    "protocolVersion": "2.0",
+    "name": "Mistyped Agent",
+    "description": "Declares the correct keys with the wrong types.",
+    "version": "1.0.0",
+    "url": "not-a-url",
+    "provider": { "name": "Example Operator BV" },
+    "capabilities": ["streaming"],
+    "defaultInputModes": ["text/plain"],
+    "defaultOutputModes": ["text/plain"],
+    "skills": ["classify"],
+    "x-bna.residency": "eu-west-1",
+    "x-bna.zdr": "true",
+    "x-bna.compliance": ["SOC 2"],
+    "x-bna.pricing": "free",
+    "x-bna.contact": "ops@example.invalid"
+  }
+}
