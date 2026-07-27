@@ -62,6 +62,43 @@ function isRecord(value) {
 }
 
 /**
+ * UTF-8 byte length, counted without allocating and without Node globals.
+ *
+ * The console imports this module directly so that a card is scored in the
+ * browser by the same bytes the CLI runs — `Buffer` is not available there,
+ * and encoding a 10 MiB card just to measure it would be wasteful anywhere.
+ * Lone surrogates count as 3 bytes, matching the U+FFFD substitution that
+ * both `Buffer.byteLength` and `TextEncoder` perform.
+ *
+ * @param {string} value
+ * @returns {number}
+ */
+function utf8Length(value) {
+  let bytes = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    const code = value.charCodeAt(index);
+    if (code < 0x80) {
+      bytes += 1;
+      continue;
+    }
+    if (code < 0x800) {
+      bytes += 2;
+      continue;
+    }
+    if (code >= 0xd800 && code <= 0xdbff) {
+      const next = value.charCodeAt(index + 1);
+      if (next >= 0xdc00 && next <= 0xdfff) {
+        bytes += 4;
+        index += 1;
+        continue;
+      }
+    }
+    bytes += 3;
+  }
+  return bytes;
+}
+
+/**
  * Return an own data-property value without consulting a prototype or invoking
  * a getter. The validator must not execute code supplied by an untrusted card.
  *
@@ -158,7 +195,7 @@ function inspectCard(value) {
     if (depth > MAX_CARD_DEPTH) return { valid: false, reason: `card exceeds depth limit of ${MAX_CARD_DEPTH}` };
 
     if (typeof current === "string") {
-      bytes += Buffer.byteLength(current, "utf8");
+      bytes += utf8Length(current);
     } else if (current === null || typeof current !== "object") {
       bytes += 8;
     } else {
@@ -173,7 +210,7 @@ function inspectCard(value) {
       }
 
       for (const key of keys) {
-        bytes += Buffer.byteLength(key, "utf8");
+        bytes += utf8Length(key);
         let descriptor;
         try {
           descriptor = Object.getOwnPropertyDescriptor(current, key);
@@ -224,6 +261,30 @@ function matchesType(value, expectedType) {
     case "protocol-version":
       return typeof value === "string" && A2A_PROTOCOL_VERSIONS.includes(value);
   }
+}
+
+/**
+ * Read a schema field's declared value using exactly the rules validateCard
+ * applies — canonical flat key first, then the accepted legacy nesting.
+ *
+ * Renderers need this. A card that declares `x-bna.residency` in the nested
+ * form is a card that declared it, and any surface that reads the flat key
+ * alone will tell a compliant vendor their residency is undeclared. That is
+ * the one thing this validator exists to prevent, so the lookup is published
+ * rather than left for each caller to approximate.
+ *
+ * `declared` says only that the vendor stated a value. It carries no claim
+ * that BNA observed or agreed with it.
+ *
+ * @param {unknown} card
+ * @param {string} key
+ * @returns {{ declared: boolean, value?: unknown, nested: boolean }}
+ */
+export function readCardField(card, key) {
+  if (!isRecord(card)) return { declared: false, nested: false };
+  const field = getFieldValue(card, key);
+  if (!field.found || !hasValue(field.value)) return { declared: false, nested: false };
+  return { declared: true, value: field.value, nested: field.nested };
 }
 
 /**

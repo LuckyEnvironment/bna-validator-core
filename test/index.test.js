@@ -101,6 +101,71 @@ test("does not throw for malformed, unsafe, deep, circular, or oversized cards",
   assert.match(validateCard(oversized).fields[0].msg, /size limit/);
 });
 
+test("measures card size in UTF-8 bytes without depending on Node globals", () => {
+  // The console imports this module directly, so `Buffer` is not in scope
+  // there. The size limit still has to be counted in real UTF-8 bytes, and
+  // has to agree with Buffer.byteLength exactly — a card that is oversized
+  // in the CLI must be oversized in the browser, or the two disagree about
+  // whether a third party's card is admissible at all.
+  const samples = [
+    "",
+    "ascii",
+    "é",
+    "中",
+    "\u{1F600}",
+    "\u{1F469}‍\u{1F469}‍\u{1F467}‍\u{1F466}",
+    "\uD83D", // lone high surrogate
+    "\uDC00", // lone low surrogate
+    "a\uD83Db",
+    "München \u{1F916}"
+  ];
+
+  // A one-key card costs the key plus the value, so the budget is exact and
+  // the boundary can be asserted to the byte rather than approximately.
+  const keyBytes = "description".length;
+  const overLimit = /size limit/;
+
+  for (const sample of samples) {
+    const sampleBytes = Buffer.byteLength(sample, "utf8");
+    const fill = MAX_CARD_BYTES - keyBytes - sampleBytes;
+    const atLimit = validateCard({ description: "x".repeat(fill) + sample });
+    const overBy1 = validateCard({ description: "x".repeat(fill + 1) + sample });
+
+    assert.ok(
+      !overLimit.test(atLimit.fields[0].msg),
+      `${JSON.stringify(sample)} (${sampleBytes} B): a card of exactly MAX_CARD_BYTES was rejected — ` +
+        `the counter is over-counting. Got: ${atLimit.fields[0].msg}`
+    );
+    assert.match(
+      overBy1.fields[0].msg,
+      overLimit,
+      `${JSON.stringify(sample)} (${sampleBytes} B): one byte past MAX_CARD_BYTES was accepted — ` +
+        "the counter is under-counting."
+    );
+  }
+
+  // Counting UTF-16 code units instead of UTF-8 bytes would halve the
+  // measured size of this card and let it through.
+  const astral = "\u{1F600}".repeat(3_000_000); // 12 MB as UTF-8, 6 M code units
+  assert.match(
+    validateCard({ description: astral }).fields[0].msg,
+    overLimit,
+    "an astral-plane card over the byte limit was admitted — size is being counted in UTF-16 units"
+  );
+
+  // The module must not reach for a Node-only global at all. Comments are
+  // stripped first so that documenting the constraint does not violate it.
+  const code = readFileSync(fileURLToPath(new URL("../src/index.js", import.meta.url)), "utf8")
+    .replace(/\/\*[\s\S]*?\*\//g, " ")
+    .replace(/(^|[^:])\/\/.*$/gm, "$1");
+  for (const nodeGlobal of ["Buffer", "process", "require", "__dirname", "global"]) {
+    assert.ok(
+      !new RegExp(`\\b${nodeGlobal}\\b`).test(code),
+      `src/index.js uses the Node-only global ${nodeGlobal}; the console imports this file and cannot provide it`
+    );
+  }
+});
+
 test("handles Unicode and homoglyphs without normalising them", () => {
   const report = validateCard({ ...fixture, name: "Аgent \u{1F916}", provider: { name: "München" } });
   assert.equal(report.verdict, "ok");

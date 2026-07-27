@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- **The package no longer depends on Node globals.** Card size was measured with
+  `Buffer.byteLength`, which does not exist in a browser, so the module could
+  not be imported by the console or the developer portal. It now counts UTF-8
+  bytes directly, without allocating — lone surrogates count as 3 bytes, which
+  is what both `Buffer.byteLength` and `TextEncoder` produce after U+FFFD
+  substitution, so the limit is enforced identically wherever it runs.
+
+  This is what lets the documentation portal import this file straight from the
+  repository and score a card in the reader's browser using the same bytes the
+  CLI counts, rather than a copy that can drift.
+
 ### Added
 
 - **Golden fixture corpus** — 12 anonymised cards in `test/fixtures/golden/`,
