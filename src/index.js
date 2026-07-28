@@ -16,10 +16,32 @@ export const MAX_CARD_BYTES = 10 * 1024 * 1024;
 /** The deepest object or array nesting accepted in an untrusted card. */
 export const MAX_CARD_DEPTH = 32;
 
-/** @typedef {"required" | "bna"} FieldKind */
-/** @typedef {"string" | "boolean" | "object" | "array:string" | "url" | "protocol-version"} ExpectedType */
+/**
+ * @typedef {"required" | "bna" | "informational"} FieldKind
+ *
+ * `required` — an A2A field. Absent is blocking.
+ *
+ * `bna` — a BNA extension. Absent is a warning, and an error under `strict`.
+ *
+ * `informational` — a BNA extension whose absence carries no verdict at all.
+ * It reports as `info` and is counted in neither `errors` nor `warns`, so a
+ * card that declares nothing here still scores `ok`.
+ *
+ * The third kind exists because of one specific field. `x-bna.probe-key`
+ * enables a vendor to countersign BNA's probes — a mechanism whose entire
+ * purpose is to hold BNA accountable. If not publishing one cost the vendor a
+ * verdict, an accountability mechanism would have become leverage over the
+ * people being rated, which is the failure mode SURFACE-05 §4 names explicitly.
+ * A missing receipt is absence of evidence, not evidence of absence, and the
+ * `----` state in a probe verdict already says exactly that about a claim
+ * nobody has checked. This is the same rule, one level up.
+ *
+ * `strict` still escalates it, because strict is a deliberate request to treat
+ * every undeclared field as blocking.
+ */
+/** @typedef {"string" | "boolean" | "object" | "array:string" | "url" | "protocol-version" | "jwk"} ExpectedType */
 /** @typedef {readonly [key: string, kind: FieldKind, why: string, expectedType: ExpectedType]} CardSchemaField */
-/** @typedef {{ key: string, kind: FieldKind, level: "ok" | "warn" | "err", msg: string, why: string }} FieldResult */
+/** @typedef {{ key: string, kind: FieldKind, level: "ok" | "info" | "warn" | "err", msg: string, why: string }} FieldResult */
 
 /**
  * The authoritative, versioned BNA agent-card schema.
@@ -43,7 +65,8 @@ export const CARD_SCHEMA = /** @type {readonly CardSchemaField[]} */ (Object.fre
   Object.freeze(["x-bna.zdr", "bna", "Whether payloads are retained.", "boolean"]),
   Object.freeze(["x-bna.compliance", "bna", "Certifications held.", "array:string"]),
   Object.freeze(["x-bna.pricing", "bna", "Charging model and rates.", "object"]),
-  Object.freeze(["x-bna.contact", "bna", "Operations contact.", "string"])
+  Object.freeze(["x-bna.contact", "bna", "Operations contact.", "string"]),
+  Object.freeze(["x-bna.probe-key", "informational", "Public key that countersigns probes.", "jwk"])
 ]));
 
 /**
@@ -260,7 +283,51 @@ function matchesType(value, expectedType) {
       }
     case "protocol-version":
       return typeof value === "string" && A2A_PROTOCOL_VERSIONS.includes(value);
+    case "jwk":
+      return isPublicJwk(value);
   }
+}
+
+/**
+ * A public JWK of a kind BNA can verify a probe receipt with.
+ *
+ * The structure is checked, not merely the presence of an object. A card that
+ * declares a malformed key is worse than one that declares none: it advertises
+ * an attestation path that cannot work, and the vendor has no way to discover
+ * that from their own side. So a bad key is a type error and travels the
+ * existing wrong-type path — a warning normally, an error under --strict —
+ * rather than being silently treated as absent.
+ *
+ * Private key material is refused outright. A `d` parameter in a published card
+ * is a catastrophic operator mistake, and the one moment it can be caught for
+ * them is here.
+ *
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+function isPublicJwk(value) {
+  if (!isRecord(value)) return false;
+
+  const nonEmpty = (/** @type {unknown} */ item) => typeof item === "string" && item.length > 0;
+
+  // Never accept anything carrying a private component.
+  for (const secret of ["d", "p", "q", "dp", "dq", "qi", "k"]) {
+    if (secret in value) return false;
+  }
+
+  if (!nonEmpty(value.kid)) return false;
+
+  if (value.kty === "OKP") {
+    // Ed25519 only. Other curves are not a BNA receipt algorithm, and
+    // accepting one would publish a key nothing can verify against.
+    return value.crv === "Ed25519" && nonEmpty(value.x);
+  }
+
+  if (value.kty === "RSA") {
+    return nonEmpty(value.n) && nonEmpty(value.e);
+  }
+
+  return false;
 }
 
 /**
@@ -294,7 +361,7 @@ export function readCardField(card, key) {
  *
  * @param {unknown} card
  * @param {{ strict?: boolean } | undefined} [options]
- * @returns {{ verdict: "ok" | "warn" | "err", errors: number, warns: number, fields: Array<{ key: string, kind: FieldKind, level: "ok" | "warn" | "err", msg: string, why: string }> }}
+ * @returns {{ verdict: "ok" | "warn" | "err", errors: number, warns: number, infos: number, fields: Array<{ key: string, kind: FieldKind, level: "ok" | "info" | "warn" | "err", msg: string, why: string }> }}
  */
 export function validateCard(card, options = {}) {
   const strict = options?.strict === true;
@@ -311,6 +378,9 @@ export function validateCard(card, options = {}) {
     if (!field.found || !hasValue(field.value)) {
       if (kind === "required" || strict) {
         return { key, kind, level: "err", msg: "Missing — blocking.", why };
+      }
+      if (kind === "informational") {
+        return { key, kind, level: "info", msg: "Not declared — no verdict either way.", why };
       }
       return { key, kind, level: "warn", msg: "Not declared — safe default will apply.", why };
     }
@@ -335,7 +405,11 @@ export function validateCard(card, options = {}) {
 
   const errors = fields.filter((field) => field.level === "err").length;
   const warns = fields.filter((field) => field.level === "warn").length;
+  const infos = fields.filter((field) => field.level === "info").length;
+
+  // `info` is deliberately absent from this expression. A field that reports
+  // `info` can never move a verdict, which is the whole point of the kind.
   const verdict = errors > 0 ? "err" : warns > 0 ? "warn" : "ok";
 
-  return { verdict, errors, warns, fields };
+  return { verdict, errors, warns, infos, fields };
 }

@@ -1,17 +1,33 @@
 {
-  "description": "The 03 card re-scored with strict: true. Undeclared extension fields become blocking errors instead of warnings.",
-  "options": { "strict": true },
-  "expect": { "verdict": "err", "errors": 5, "warns": 0 },
+  "description": "The 03 card re-scored with strict: true. Undeclared extension fields become blocking errors instead of warnings. Under strict the informational probe-key field escalates alongside the five extensions, so six fields block rather than five.",
+  "options": {
+    "strict": true
+  },
+  "expect": {
+    "verdict": "err",
+    "errors": 6,
+    "warns": 0
+  },
   "card": {
     "protocolVersion": "1.0",
     "name": "Translation Agent",
     "description": "Translates short documents between EU languages.",
     "version": "0.9.0",
     "url": "https://translate.example.invalid/a2a",
-    "provider": { "name": "Example Linguistics SARL" },
-    "capabilities": { "streaming": true },
-    "defaultInputModes": ["text/plain"],
-    "defaultOutputModes": ["text/plain"],
-    "skills": ["translate"]
+    "provider": {
+      "name": "Example Linguistics SARL"
+    },
+    "capabilities": {
+      "streaming": true
+    },
+    "defaultInputModes": [
+      "text/plain"
+    ],
+    "defaultOutputModes": [
+      "text/plain"
+    ],
+    "skills": [
+      "translate"
+    ]
   }
 }

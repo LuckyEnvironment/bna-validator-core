@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — M2, probe keys
+
+- **`x-bna.probe-key`**, a public JWK a vendor publishes so BNA's probes of them
+  can be countersigned. Accepts Ed25519 (OKP) and RSA, and validates the
+  structure rather than the presence: a malformed key is a type error on the
+  existing wrong-type path, because a broken key advertises an attestation path
+  that cannot work and the vendor has no way to discover that from their side.
+  Any JWK carrying a private component is refused outright.
+
+- **A third field kind, `informational`, and a fourth level, `info`.** An
+  undeclared probe key reports as `info`: counted in neither `errors` nor
+  `warns`, and unable to move a verdict. A fully conformant card that publishes
+  no probe key still scores `ok`.
+
+  This exists because of one specific field. `x-bna.probe-key` enables a vendor
+  to hold BNA accountable, and if not publishing one cost them a verdict, an
+  accountability mechanism would have become leverage over the people being
+  rated. `strict` still escalates it, because strict is a deliberate request to
+  treat every undeclared field as blocking.
+
+  The alternative — making it a `bna` field — was measured before being
+  rejected: it moved four of the twelve golden cards from `ok` to `warn`,
+  which is to say every card that was previously perfect.
+
+- Golden fixtures 13 and 14 covering a valid and a malformed probe key. The
+  snapshot diff for the existing twelve is additive: one `info` row each, and
+  no change to any existing field's level. The single scoring change is the
+  strict fixture's error count, 5 to 6.
+
 ### Changed
 
 - **The package no longer depends on Node globals.** Card size was measured with

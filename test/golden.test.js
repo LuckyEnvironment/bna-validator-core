@@ -66,7 +66,16 @@ test("golden corpus covers every field kind and both extension forms", () => {
     const report = validateCard(fixture.card, fixture.options);
     for (const field of report.fields) observed.add(`${field.kind}:${field.level}`);
   }
-  for (const expected of ["required:ok", "required:err", "bna:ok", "bna:warn", "bna:err"]) {
+  for (const expected of [
+    "required:ok",
+    "required:err",
+    "bna:ok",
+    "bna:warn",
+    "bna:err",
+    "informational:ok",
+    "informational:info",
+    "informational:warn"
+  ]) {
     assert.ok(observed.has(expected), `no fixture produces a ${expected} field`);
   }
 
@@ -88,7 +97,12 @@ for (const { name, fixture } of fixtures) {
     assert.equal(report.verdict, fixture.expect.verdict);
     assert.equal(report.errors, fixture.expect.errors);
     assert.equal(report.warns, fixture.expect.warns);
-    assert.equal(report.errors + report.warns + report.fields.filter((f) => f.level === "ok").length, CARD_SCHEMA.length);
+    // Every field lands on exactly one level, and `info` is one of them now.
+    // Counting it here is what keeps a silently-dropped field from passing.
+    assert.equal(
+      report.errors + report.warns + report.infos + report.fields.filter((f) => f.level === "ok").length,
+      CARD_SCHEMA.length
+    );
   });
 }
 

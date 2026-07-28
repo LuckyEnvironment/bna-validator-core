@@ -22,7 +22,7 @@ test("exports versioned schema metadata", () => {
   assert.equal(SCHEMA_VERSION, "0.1");
   assert.deepEqual(A2A_PROTOCOL_VERSIONS, ["1.0"]);
   assert.equal(SCHEMA_METADATA.canonicalExtensionFormat, "flat");
-  assert.equal(CARD_SCHEMA.length, 15);
+  assert.equal(CARD_SCHEMA.length, 16);
 });
 
 test("accepts a complete canonical card", () => {
@@ -30,7 +30,12 @@ test("accepts a complete canonical card", () => {
   assert.equal(report.verdict, "ok");
   assert.equal(report.errors, 0);
   assert.equal(report.warns, 0);
-  assert.ok(report.fields.every((field) => field.level === "ok"));
+  // Every field but the probe key, which this fixture does not publish. It
+  // reports `info` and leaves the verdict at ok — declaring no probe key is
+  // not a defect.
+  assert.ok(report.fields.every((field) => field.level === "ok" || field.level === "info"));
+  assert.equal(report.infos, 1);
+  assert.equal(report.fields.find((field) => field.key === "x-bna.probe-key")?.level, "info");
 });
 
 test("preserves zero and false values while rejecting blank strings", () => {
@@ -55,15 +60,22 @@ test("accepts nested BNA extensions as a style warning", () => {
   const report = validateCard(card);
   assert.equal(report.errors, 0);
   assert.equal(report.warns, 5);
-  assert.match(report.fields.at(-1)?.msg ?? "", /canonical flat key/);
+  assert.match(
+    report.fields.find((field) => field.key === "x-bna.contact")?.msg ?? "",
+    /canonical flat key/
+  );
 });
 
 test("enforces required field values and strict optional fields", () => {
   const absent = validateCard({ ...fixture, name: "", "x-bna.contact": undefined });
   assert.equal(absent.errors, 1);
   assert.equal(absent.warns, 1);
+  // Two: the withheld contact, and the probe key this fixture never declares.
+  // `strict` is a deliberate request to treat every undeclared field as
+  // blocking, so it escalates the informational kind as well.
   const strict = validateCard({ ...fixture, "x-bna.contact": undefined }, { strict: true });
-  assert.equal(strict.errors, 1);
+  assert.equal(strict.errors, 2);
+  assert.equal(strict.infos, 0, "strict leaves nothing at info");
 });
 
 test("reports type mismatches", () => {

@@ -20,7 +20,8 @@
         "x-bna.zdr": "ok: Present",
         "x-bna.compliance": "ok: Present",
         "x-bna.pricing": "ok: Present",
-        "x-bna.contact": "ok: Present"
+        "x-bna.contact": "ok: Present",
+        "x-bna.probe-key": "info: Not declared — no verdict either way."
       }
     },
     "02-nested-extensions.json": {
@@ -42,7 +43,8 @@
         "x-bna.zdr": "warn: Declared using nested extension form — use the canonical flat key.",
         "x-bna.compliance": "warn: Declared using nested extension form — use the canonical flat key.",
         "x-bna.pricing": "warn: Declared using nested extension form — use the canonical flat key.",
-        "x-bna.contact": "warn: Declared using nested extension form — use the canonical flat key."
+        "x-bna.contact": "warn: Declared using nested extension form — use the canonical flat key.",
+        "x-bna.probe-key": "info: Not declared — no verdict either way."
       }
     },
     "03-required-only.json": {
@@ -64,12 +66,13 @@
         "x-bna.zdr": "warn: Not declared — safe default will apply.",
         "x-bna.compliance": "warn: Not declared — safe default will apply.",
         "x-bna.pricing": "warn: Not declared — safe default will apply.",
-        "x-bna.contact": "warn: Not declared — safe default will apply."
+        "x-bna.contact": "warn: Not declared — safe default will apply.",
+        "x-bna.probe-key": "info: Not declared — no verdict either way."
       }
     },
     "04-required-only-strict.json": {
       "verdict": "err",
-      "errors": 5,
+      "errors": 6,
       "warns": 0,
       "fields": {
         "protocolVersion": "ok: Present",
@@ -86,7 +89,8 @@
         "x-bna.zdr": "err: Missing — blocking.",
         "x-bna.compliance": "err: Missing — blocking.",
         "x-bna.pricing": "err: Missing — blocking.",
-        "x-bna.contact": "err: Missing — blocking."
+        "x-bna.contact": "err: Missing — blocking.",
+        "x-bna.probe-key": "err: Missing — blocking."
       }
     },
     "05-missing-required.json": {
@@ -108,7 +112,8 @@
         "x-bna.zdr": "warn: Not declared — safe default will apply.",
         "x-bna.compliance": "warn: Not declared — safe default will apply.",
         "x-bna.pricing": "warn: Not declared — safe default will apply.",
-        "x-bna.contact": "warn: Not declared — safe default will apply."
+        "x-bna.contact": "warn: Not declared — safe default will apply.",
+        "x-bna.probe-key": "info: Not declared — no verdict either way."
       }
     },
     "06-type-mismatches.json": {
@@ -130,7 +135,8 @@
         "x-bna.zdr": "warn: Invalid type — expected boolean.",
         "x-bna.compliance": "ok: Present",
         "x-bna.pricing": "warn: Invalid type — expected object.",
-        "x-bna.contact": "ok: Present"
+        "x-bna.contact": "ok: Present",
+        "x-bna.probe-key": "info: Not declared — no verdict either way."
       }
     },
     "07-zero-and-false.json": {
@@ -152,7 +158,8 @@
         "x-bna.zdr": "ok: Present",
         "x-bna.compliance": "ok: Present",
         "x-bna.pricing": "ok: Present",
-        "x-bna.contact": "ok: Present"
+        "x-bna.contact": "ok: Present",
+        "x-bna.probe-key": "info: Not declared — no verdict either way."
       }
     },
     "08-partial-extensions.json": {
@@ -174,7 +181,8 @@
         "x-bna.zdr": "warn: Not declared — safe default will apply.",
         "x-bna.compliance": "warn: Not declared — safe default will apply.",
         "x-bna.pricing": "warn: Not declared — safe default will apply.",
-        "x-bna.contact": "ok: Present"
+        "x-bna.contact": "ok: Present",
+        "x-bna.probe-key": "info: Not declared — no verdict either way."
       }
     },
     "09-flat-provider-key.json": {
@@ -196,7 +204,8 @@
         "x-bna.zdr": "ok: Present",
         "x-bna.compliance": "ok: Present",
         "x-bna.pricing": "ok: Present",
-        "x-bna.contact": "ok: Present"
+        "x-bna.contact": "ok: Present",
+        "x-bna.probe-key": "info: Not declared — no verdict either way."
       }
     },
     "10-unicode-homoglyph.json": {
@@ -218,7 +227,8 @@
         "x-bna.zdr": "ok: Present",
         "x-bna.compliance": "ok: Present",
         "x-bna.pricing": "ok: Present",
-        "x-bna.contact": "ok: Present"
+        "x-bna.contact": "ok: Present",
+        "x-bna.probe-key": "info: Not declared — no verdict either way."
       }
     },
     "11-flat-wins-over-nested.json": {
@@ -240,7 +250,8 @@
         "x-bna.zdr": "ok: Present",
         "x-bna.compliance": "ok: Present",
         "x-bna.pricing": "ok: Present",
-        "x-bna.contact": "ok: Present"
+        "x-bna.contact": "ok: Present",
+        "x-bna.probe-key": "info: Not declared — no verdict either way."
       }
     },
     "12-empty-object.json": {
@@ -262,7 +273,54 @@
         "x-bna.zdr": "warn: Not declared — safe default will apply.",
         "x-bna.compliance": "warn: Not declared — safe default will apply.",
         "x-bna.pricing": "warn: Not declared — safe default will apply.",
-        "x-bna.contact": "warn: Not declared — safe default will apply."
+        "x-bna.contact": "warn: Not declared — safe default will apply.",
+        "x-bna.probe-key": "info: Not declared — no verdict either way."
+      }
+    },
+    "13-probe-key.json": {
+      "verdict": "ok",
+      "errors": 0,
+      "warns": 0,
+      "fields": {
+        "protocolVersion": "ok: Present",
+        "name": "ok: Present",
+        "description": "ok: Present",
+        "version": "ok: Present",
+        "url": "ok: Present",
+        "provider.name": "ok: Present",
+        "capabilities": "ok: Present",
+        "defaultInputModes": "ok: Present",
+        "defaultOutputModes": "ok: Present",
+        "skills": "ok: Present",
+        "x-bna.residency": "ok: Present",
+        "x-bna.zdr": "ok: Present",
+        "x-bna.compliance": "ok: Present",
+        "x-bna.pricing": "ok: Present",
+        "x-bna.contact": "ok: Present",
+        "x-bna.probe-key": "ok: Present"
+      }
+    },
+    "14-probe-key-malformed.json": {
+      "verdict": "warn",
+      "errors": 0,
+      "warns": 1,
+      "fields": {
+        "protocolVersion": "ok: Present",
+        "name": "ok: Present",
+        "description": "ok: Present",
+        "version": "ok: Present",
+        "url": "ok: Present",
+        "provider.name": "ok: Present",
+        "capabilities": "ok: Present",
+        "defaultInputModes": "ok: Present",
+        "defaultOutputModes": "ok: Present",
+        "skills": "ok: Present",
+        "x-bna.residency": "ok: Present",
+        "x-bna.zdr": "ok: Present",
+        "x-bna.compliance": "ok: Present",
+        "x-bna.pricing": "ok: Present",
+        "x-bna.contact": "ok: Present",
+        "x-bna.probe-key": "warn: Invalid type — expected jwk."
       }
     }
   }
