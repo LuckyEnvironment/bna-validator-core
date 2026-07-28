@@ -34,6 +34,14 @@
     "check": "npm run lint && npm run typecheck && npm run test"
   },
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuckyEnvironment/bna-validator-core.git"
+  },
+  "homepage": "https://github.com/LuckyEnvironment/bna-validator-core#readme",
+  "bugs": {
+    "url": "https://github.com/LuckyEnvironment/bna-validator-core/issues"
+  },
   "devDependencies": {
     "@types/node": "^26.1.1",
     "eslint": "^9.39.1",
